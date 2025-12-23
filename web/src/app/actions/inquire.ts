@@ -40,22 +40,24 @@ export async function sendInquiry(
         // If you have SMTP credentials, replace these or use environment variables.
 
         // Example using Ethereal for testing or console fallback
-        const transporter = nodemailer.createTransport({
-            // If env vars are present, use them. Otherwise, we might just log it?
-            // Actually, nodemailer default transport without options doesn't work well alone.
-            // Let's us jsonTransport for dev logging if no env provided.
-            ...(process.env.SMTP_HOST ? {
+        // 3. Configure Transporter
+        let transporter;
+
+        if (process.env.SMTP_HOST) {
+            transporter = nodemailer.createTransport({
                 host: process.env.SMTP_HOST,
                 port: Number(process.env.SMTP_PORT) || 587,
-                secure: false, // true for 465, false for other ports
+                secure: false,
                 auth: {
                     user: process.env.SMTP_USER,
                     pass: process.env.SMTP_PASS,
                 },
-            } : {
-                jsonTransport: true // Logs to console in the result
-            })
-        });
+            });
+        } else {
+            transporter = nodemailer.createTransport({
+                jsonTransport: true
+            });
+        }
 
         // 4. Send Email
         const info = await transporter.sendMail({
