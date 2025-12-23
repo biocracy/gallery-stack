@@ -1,14 +1,11 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { sendInquiry } from "../actions/inquire";
 import Link from "next/link";
-// useActionState is available in React 19 (which is in package.json) or possibly 'react-dom' experimental.
-// If not available, we fall back to standard form handling.
-// Given React 19.2.3 in dependencies, useActionState should be available from 'react'.
 
-export default function InquirePage() {
+function InquireContent() {
     const searchParams = useSearchParams();
     const artworkTitle = searchParams.get("artwork") || "";
     const isCommission = searchParams.get("type") === "commission";
@@ -119,5 +116,13 @@ export default function InquirePage() {
                 </form>
             )}
         </main>
+    );
+}
+
+export default function InquirePage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <InquireContent />
+        </Suspense>
     );
 }
