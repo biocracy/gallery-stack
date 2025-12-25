@@ -25,12 +25,21 @@ export default function PaintingsGrid({ artworks }: PaintingsGridProps) {
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const displayedArtworks = artworks.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
+    const scrollToTop = () => {
+        const section = document.getElementById("paintings-grid");
+        if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
     const nextPage = () => {
         setCurrentPage((prev) => (prev + 1) % totalPages);
+        scrollToTop();
     };
 
     const prevPage = () => {
         setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+        scrollToTop();
     };
 
     return (
