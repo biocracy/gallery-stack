@@ -44,7 +44,8 @@ export default function Display0({ items }: Display0Props) {
     }
 
     return (
-        <section className="relative w-full h-[80vh] overflow-hidden bg-neutral-900 mb-16">
+
+        <section className="relative w-full h-[50vh] sm:h-[80vh] overflow-hidden mb-16">
             {items.map((item, index) => (
                 <div
                     key={item._id}
@@ -57,26 +58,26 @@ export default function Display0({ items }: Display0Props) {
                                 src={urlFor(item.image)}
                                 alt={item.name || "Display Image"}
                                 fill
-                                className="object-cover"
+                                className="object-contain sm:object-cover"
                                 priority={index === 0}
                                 unoptimized
                             />
                         )}
-                        <div className="absolute inset-0 bg-black/30" /> {/* Dimming overlay */}
+                        <div className="hidden sm:block absolute inset-0 bg-black/30" /> {/* Dimming overlay - hidden on mobile */}
                     </div>
                 </div>
             ))}
 
-            <div className="absolute bottom-12 left-6 sm:left-12 z-20 max-w-2xl text-white">
+            <div className="absolute bottom-12 left-6 sm:left-12 z-20 max-w-2xl text-neutral-500 sm:text-white landscape-text">
                 <h2
                     key={`title-${currentIndex}`}
-                    className="text-4xl sm:text-6xl font-bold tracking-tight mb-4 animate-[fadeInUp_1s_ease-out]"
+                    className="text-4xl sm:text-6xl font-bold tracking-tight mb-4 animate-[fadeInUp_1s_ease-out] stroke-mobile sm:stroke-desktop"
                 >
                     {items[currentIndex].name}
                 </h2>
                 <p
                     key={`desc-${currentIndex}`}
-                    className="text-lg sm:text-xl font-light text-neutral-200 animate-[fadeInUp_1.2s_ease-out]"
+                    className="text-lg sm:text-xl font-light text-neutral-500 sm:text-neutral-200 animate-[fadeInUp_1.2s_ease-out] stroke-mobile-thin sm:stroke-desktop-thin"
                 >
                     {items[currentIndex].description}
                 </p>
@@ -86,6 +87,32 @@ export default function Display0({ items }: Display0Props) {
                 @keyframes fadeInUp {
                     from { opacity: 0; transform: translateY(20px); }
                     to { opacity: 1; transform: translateY(0); }
+                }
+                .stroke-mobile {
+                    -webkit-text-stroke: 1px white;
+                    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+                }
+                .stroke-mobile-thin {
+                    -webkit-text-stroke: 0.5px white;
+                }
+                @media (min-width: 640px) {
+                    .stroke-desktop {
+                        -webkit-text-stroke: 1px rgba(0,0,0,0.5);
+                        text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+                    }
+                    .stroke-desktop-thin {
+                        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+                    }
+                }
+                @media (max-height: 500px) and (orientation: landscape) {
+                    .landscape-text h2 {
+                        font-size: 1.25rem !important;
+                        margin-bottom: 0.25rem !important;
+                    }
+                    .landscape-text p {
+                        font-size: 0.75rem !important;
+                        line-height: 1.25 !important;
+                    }
                 }
             `}</style>
         </section>

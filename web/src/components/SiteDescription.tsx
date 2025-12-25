@@ -62,10 +62,10 @@ export default function SiteDescription() {
     const visionFontSize = paragraphHeight > 0 ? paragraphHeight / 6 : 0;
 
     return (
-        <section className="px-6 sm:px-12 py-16 sm:py-24 max-w-5xl mx-auto flex flex-row items-stretch justify-center gap-8 sm:gap-12">
-            {/* VISION Sidebar */}
+        <section className="px-6 sm:px-12 py-16 sm:py-24 max-w-5xl mx-auto flex flex-col sm:flex-row items-stretch justify-center gap-8 sm:gap-12">
+            {/* VISION Sidebar - Hidden on mobile, visible on sm+ */}
             <div
-                className="flex flex-col justify-between select-none font-serif italic font-light text-neutral-400 dark:text-neutral-600 leading-none items-center"
+                className="hidden sm:flex flex-col justify-between select-none font-serif italic font-light text-neutral-400 dark:text-neutral-600 leading-none items-center"
                 aria-hidden="true"
             >
                 {"VISION".split("").map((char, i) => (
@@ -83,49 +83,58 @@ export default function SiteDescription() {
                 ))}
             </div>
 
-            <p
-                ref={setParagraphNode}
-                className="text-xl sm:text-2xl md:text-3xl leading-relaxed text-neutral-800 dark:text-neutral-200 font-light font-serif text-justify break-words flex-1"
-            >
-                {(() => {
-                    let globalIndex = 0;
-                    return TEXT.split(/(\s+)/).map((part, partIndex) => {
-                        // If it's whitespace, return it directly to allow wrapping/justification between words
-                        if (part.match(/^\s+$/)) {
-                            globalIndex += part.length;
-                            return <span key={`sep-${partIndex}`}>{part}</span>;
-                        }
+            <div className="flex-1">
+                {/* Horizontal Title - Visible on mobile only */}
+                <h2 className="block sm:hidden text-3xl font-serif italic font-light text-neutral-400 dark:text-neutral-600 mb-6 flex flex-row justify-between w-full">
+                    {"VISION".split("").map((char, i) => (
+                        <span key={i}>{char}</span>
+                    ))}
+                </h2>
 
-                        // It's a word: wrap in whitespace-nowrap to keep chars together
-                        return (
-                            <span key={`word-${partIndex}`} className="inline-block whitespace-nowrap">
-                                {part.split("").map((char, charIndex) => {
-                                    const currentIndex = globalIndex++;
-                                    const scale = getScale(currentIndex, scrollSeed);
-                                    const isNormal = scale === 1;
+                <p
+                    ref={setParagraphNode}
+                    className="text-xl sm:text-2xl md:text-3xl leading-relaxed text-neutral-800 dark:text-neutral-200 font-light font-serif text-justify break-words"
+                >
+                    {(() => {
+                        let globalIndex = 0;
+                        return TEXT.split(/(\s+)/).map((part, partIndex) => {
+                            // If it's whitespace, return it directly to allow wrapping/justification between words
+                            if (part.match(/^\s+$/)) {
+                                globalIndex += part.length;
+                                return <span key={`sep-${partIndex}`}>{part}</span>;
+                            }
 
-                                    return (
-                                        <span
-                                            key={`char-${currentIndex}`}
-                                            className="inline-block transition-transform duration-500 ease-out will-change-transform"
-                                            style={{
-                                                transform: isNormal ? "none" : `scale(${scale})`,
-                                                transformOrigin: "center bottom",
-                                                padding: isNormal ? "0" : "0 0.5px",
-                                                zIndex: isNormal ? "auto" : 10,
-                                                position: isNormal ? "static" : "relative",
-                                                display: "inline-block" // Ensure transform works
-                                            }}
-                                        >
-                                            {char}
-                                        </span>
-                                    );
-                                })}
-                            </span>
-                        );
-                    });
-                })()}
-            </p>
+                            // It's a word: wrap in whitespace-nowrap to keep chars together
+                            return (
+                                <span key={`word-${partIndex}`} className="inline-block whitespace-nowrap">
+                                    {part.split("").map((char, charIndex) => {
+                                        const currentIndex = globalIndex++;
+                                        const scale = getScale(currentIndex, scrollSeed);
+                                        const isNormal = scale === 1;
+
+                                        return (
+                                            <span
+                                                key={`char-${currentIndex}`}
+                                                className="inline-block transition-transform duration-500 ease-out will-change-transform"
+                                                style={{
+                                                    transform: isNormal ? "none" : `scale(${scale})`,
+                                                    transformOrigin: "center bottom",
+                                                    padding: isNormal ? "0" : "0 0.5px",
+                                                    zIndex: isNormal ? "auto" : 10,
+                                                    position: isNormal ? "static" : "relative",
+                                                    display: "inline-block" // Ensure transform works
+                                                }}
+                                            >
+                                                {char}
+                                            </span>
+                                        );
+                                    })}
+                                </span>
+                            );
+                        });
+                    })()}
+                </p>
+            </div>
         </section>
     );
 }
