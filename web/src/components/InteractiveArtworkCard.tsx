@@ -45,6 +45,25 @@ export default function InteractiveArtworkCard({ artwork, priority = false }: { 
         setCurrentIndex(index);
     };
 
+    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        if (allImages.length <= 1) return;
+        if (!containerRef.current) return;
+
+        const { left, width } = containerRef.current.getBoundingClientRect();
+        const x = e.touches[0].clientX - left;
+
+        // Calculate percentage (0 to 1)
+        const percentage = Math.max(0, Math.min(1, x / width));
+
+        // Map to index
+        const index = Math.min(
+            allImages.length - 1,
+            Math.floor(percentage * allImages.length)
+        );
+
+        setCurrentIndex(index);
+    };
+
     const handleMouseLeave = () => {
         setCurrentIndex(0);
     };
@@ -89,9 +108,11 @@ export default function InteractiveArtworkCard({ artwork, priority = false }: { 
             <article className="flex flex-col h-full animate-[fadeIn_0.5s_ease-out]">
                 <div
                     ref={containerRef}
-                    className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-800 transition-shadow duration-300 group-hover:shadow-md"
+                    className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-800 transition-shadow duration-300 group-hover:shadow-md touch-pan-y"
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
+                    onTouchMove={handleTouchMove}
+                    onTouchStart={handleTouchMove}
                 >
                     <Image
                         key={currentIndex} // Force re-render for smooth switch or keep same for simple src swap? 
